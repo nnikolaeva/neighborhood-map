@@ -7,6 +7,10 @@
 	<script src="https://maps.googleapis.com/maps/api/js"></script>
 </head>
 <body>
+	<input id="search-bar">
+	<ul data-bind="foreach: places">
+		<li data-bind="text: name"></li>
+	</ul>
 	<div id="map-canvas"></div>
 	<script src="js/lib/knockout-3.3.0.js"></script>
 	<script src="js/main.js"></script>
