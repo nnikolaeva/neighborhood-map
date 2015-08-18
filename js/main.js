@@ -3,7 +3,7 @@
  	location: new google.maps.LatLng(37.397952, -122.075726),
  	iconType: "grocery"
  }, {
- 	name: "name2",
+ 	name: "ka",
  	location: new google.maps.LatLng(37.3963314,-122.062567),
  	iconType: "coffee"
  }, {
@@ -25,17 +25,13 @@
  	}
  }
 
+ // var Marker = function(place) {
+ // 	this.
+ // }
+
 
 
  var ViewModel = function() {
- 	var self = this;
- 	this.markers = ko.observableArray([]);
- 	places.forEach(function(item) {
- 		self.markers.push()
- 	});
- }
-
- function initialize() {
  	var mapCanvas = document.getElementById('map-canvas');
  	var mapOptions = {
  		center: new google.maps.LatLng(37.3878594, -122.0405356),
@@ -45,21 +41,77 @@
  	var map = new google.maps.Map(mapCanvas, mapOptions)
 
  	var iconBase = 'https://maps.google.com/mapfiles/kml/shapes/';
- 	places.forEach(function(place) {
+
+ 	var self = this;
+ 	this.markers = ko.observableArray([]);
+ 	this.mapMarkers = ko.observableArray([]);
+ 	places.forEach(function(item) {
+ 		self.markers.push(item);
+ 	});
+ 	this.filteredMarkers = ko.observableArray([]);
+ 	for (var i = 0; i < self.markers().length; i++) {
+ 		self.filteredMarkers.push(self.markers()[i]);
+ 	}
+
+ 	this.query = ko.observable("");
+ 	this.filter = function() {
+ 		self.filteredMarkers.removeAll();
+
+ 		for (var i = 0; i < self.mapMarkers().length; i++) {
+ 			self.mapMarkers()[i].setMap(null);
+ 		}
+
+ 		for (var i = 0; i < self.markers().length; i++) {
+ 			if (self.markers()[i].name.indexOf(self.query()) != -1) {
+ 				self.filteredMarkers.push(self.markers()[i]);
+
+ 				var marker = new google.maps.Marker({
+ 				position: self.markers()[i].location,
+ 				map: map,
+ 				//icon: icons[place.iconType].icon
+ 		});
+ 			}
+ 		}
+
+ 		
+
+
+ 	}
+ 	this.initialize = function() {
+ 	// var mapCanvas = document.getElementById('map-canvas');
+ 	// var mapOptions = {
+ 	// 	center: new google.maps.LatLng(37.3878594, -122.0405356),
+ 	// 	zoom: 14,
+ 	// 	mapTypeId: google.maps.MapTypeId.ROADMAP
+ 	// }
+ 	// var map = new google.maps.Map(mapCanvas, mapOptions)
+
+ 	// var iconBase = 'https://maps.google.com/mapfiles/kml/shapes/';
+
+ 	for (var i = 0; i < self.filteredMarkers().length; i++) {
  		var marker = new google.maps.Marker({
- 			position: place.location,
+ 			position: self.filteredMarkers()[i].location,
  			map: map,
  			//icon: icons[place.iconType].icon
  		});
- 	});
+ 		self.mapMarkers.push(marker);
+ 		
+
+ 	}
  	// Create the search box and link it to the UI element.
- 	//var input = document.getElementById("search-bar");
- 	//map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
-
+ 	var input = document.getElementById("search-bar");
+ 	map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
  	//var searchBox = new google.maps.places.SearchBox(input);
- 	
-
-
  }
- google.maps.event.addDomListener(window, 'load', initialize);
- ko.applyBindings(new ViewModel());
+ google.maps.event.addDomListener(window, 'load', self.initialize);
+ }
+
+ 
+
+ //google.maps.event.addDomListener(window, 'load', initialize);
+ var viewModel = new ViewModel();
+ ko.applyBindings(viewModel);
+ //google.maps.event.addDomListener(window, 'load', initialize);
+ viewModel.query.subscribe(function(){
+ 	viewModel.filter();
+ });
