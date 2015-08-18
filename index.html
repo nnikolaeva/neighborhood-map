@@ -1,19 +1,22 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-	<meta charset="UTF-8">
-	<title>Neighborhood map</title>
-	<link rel="stylesheet" type="text/css" href="css/style.css">
-	<script src="https://maps.googleapis.com/maps/api/js"></script>
+    <meta charset="UTF-8">
+    <title>Neighborhood map</title>
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <script src="https://maps.googleapis.com/maps/api/js"></script>
 </head>
+
 <body>
-	<input id="search-bar" data-bind="value: query, valueUpdate: 'afterkeydown'">
-	<div data-bind="text: query"></div>
-	<ul data-bind="foreach: filteredMarkers">
-		<li data-bind="text: name"></li>
-	</ul>
-	<div id="map-canvas"></div>
-	<script src="js/lib/knockout-3.3.0.js"></script>
-	<script src="js/main.js"></script>
+    <input id="search-bar" data-bind="value: query, valueUpdate: 'afterkeydown'">
+    <div data-bind="text: query"></div>
+    <ul data-bind="foreach: filteredMarkers">
+        <li data-bind="text: name"></li>
+    </ul>
+    <div id="map-canvas"></div>
+    <script src="js/lib/knockout-3.3.0.js"></script>
+    <script src="js/main.js"></script>
 </body>
+
 </html>
