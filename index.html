@@ -9,11 +9,13 @@
 </head>
 
 <body>
-    <input id="search-bar" data-bind="value: query, valueUpdate: 'afterkeydown'">
-    <div data-bind="text: query"></div>
-    <ul data-bind="foreach: filteredMarkers">
-        <li data-bind="text: name"></li>
-    </ul>
+    <div class="search-box">
+        <input id="search-bar" data-bind="value: query, valueUpdate: 'afterkeydown'" autofocus>
+        <ul class="list-data" data-bind="foreach: filteredMarkers">
+            <li data-bind="text: name, click: showMarkerInfo"></li>
+        </ul>
+    </div>
+
     <div id="map-canvas"></div>
     <script src="js/lib/knockout-3.3.0.js"></script>
     <script src="js/main.js"></script>

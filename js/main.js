@@ -1,89 +1,135 @@
  var places = [{
-     name: "name1",
-     lat: 37.397952,
-     lng: -122.075726,
-     iconType: "grocery"
- }, {
-     name: "ka",
-     lat: 37.3963314,
-     lng: -122.062567,
+     name: "Clocktower Coffee Roasting Company",
+     lat: 37.3970472,
+     lng: -122.0617372,
      iconType: "coffee"
- }]
+ }, {
+     name: "Le Boulanger",
+     lat: 37.3891892,
+     lng: -122.080007,
+     iconType: "coffee"
+ }, {
+     name: "Sono Sushi",
+     lat: 37.3917347,
+     lng: -122.0799789,
+     iconType: "sushi"
+ }, {
+     name: "Hon Sushi",
+     lat: 37.4163068,
+     lng: -122.0795238,
+     iconType: "sushi"
+ }, {
+     name: "Satsuma Sushi",
+     lat: 37.3755308,
+     lng: -122.0638239,
+     iconType: "sushi"
+ }];
+
  var icons = {
-     grocery: {
-         icon: "images/blue-pin.png"
+     sushi: {
+         icon: "images/sushi.png"
      },
      coffee: {
          icon: "images/coffee.png"
      }
- }
+ };
 
- var Marker = function(place) {
+ var Marker = function(place, map) {
+ 	var self = this;
      this.name = place.name;
      this.location = new google.maps.LatLng(place.lat, place.lng);
      this.mapMarker = new google.maps.Marker({
          position: this.location,
-         map: null
-             //icon: icons[place.iconType].icon
+         map: map,
+         icon: icons[place.iconType].icon
      });
- }
+     var infowindow = new google.maps.InfoWindow({
+             content: self.name
+
+         });
+     this.mapMarker.addListener('click', standOut);
+     function standOut() {
+     	infowindow.open(map, self.mapMarker);
+        self.mapMarker.setAnimation(google.maps.Animation.BOUNCE);
+        setTimeout(function() {
+        	self.mapMarker.setAnimation(null);
+        }, 1400);
+     }
+     this.showMarkerInfo = function() {
+     	standOut();
+     };
+ };
 
 
 
  var ViewModel = function() {
-     var mapCanvas = document.getElementById('map-canvas');
-     var mapOptions = {
-         center: new google.maps.LatLng(37.3878594, -122.0405356),
-         zoom: 14,
-         mapTypeId: google.maps.MapTypeId.ROADMAP
-     }
-     var map = new google.maps.Map(mapCanvas, mapOptions)
-
-     var iconBase = 'https://maps.google.com/mapfiles/kml/shapes/';
-
      var self = this;
+     var map;
      this.markers = ko.observableArray([]);
-     places.forEach(function(item) {
-         self.markers.push(new Marker(item));
-     });
      this.filteredMarkers = ko.observableArray([]);
-     for (var i = 0; i < self.markers().length; i++) {
-         self.filteredMarkers.push(self.markers()[i]);
-     }
-
      this.query = ko.observable("");
+
+     // function displays markers on the map
+     function setMapForMarkers(markers, map) {
+         for (var i = 0; i < markers.length; i++) {
+             markers[i].mapMarker.setMap(map);
+         }
+     }
+
+     // function filters markers
      this.filter = function() {
-         for (var i = 0; i < self.filteredMarkers().length; i++) {
-             self.filteredMarkers()[i].mapMarker.setMap(null);
-         }
-
+         // remove markers from the map
+         setMapForMarkers(self.filteredMarkers(), null);
+         // remove markers from the list view
          self.filteredMarkers.removeAll();
-
-
+         // find the markers that contains query string and add them to the list view
+         var marker;
          for (var i = 0; i < self.markers().length; i++) {
-             if (self.markers()[i].name.indexOf(self.query()) != -1) {
-                 self.filteredMarkers.push(self.markers()[i]);
+             marker = self.markers()[i];
+             if (marker.name.toLowerCase().indexOf(self.query().toLowerCase()) != -1) {
+                 self.filteredMarkers.push(marker);
              }
-
          }
+         // add filtered markers on the map
+         setMapForMarkers(self.filteredMarkers(), map);
+     };
 
-         for (var i = 0; i < self.filteredMarkers().length; i++) {
-             self.filteredMarkers()[i].mapMarker.setMap(map);
+     // function creates markers, create map and adds markers on the map
+     this.initializeMap = function() {
+     	// create the map
+         var mapCanvas = document.getElementById('map-canvas');
+         var mapOptions = {
+             center: new google.maps.LatLng(37.4006792, -122.068216),
+             zoom: 14,
+             mapTypeId: google.maps.MapTypeId.ROADMAP,
+             panControl: false,
+             zoomControl: true,
+             zoomControlOptions: {
+                 position: google.maps.ControlPosition.RIGHT_TOP
+             },
+             scaleControl: true
+         };
+         map = new google.maps.Map(mapCanvas, mapOptions);
+         // create Markers from objects
+         places.forEach(function(item) {
+             self.markers.push(new Marker(item, map));
+         });
+         // create copy of existing markers to use it for filtering
+         for (var i = 0; i < self.markers().length; i++) {
+             self.filteredMarkers.push(self.markers()[i]);
          }
+         
+         // add markers on the map
+         //setMapForMarkers(self.filteredMarkers(), map);
+         //self.setInfoWindow();
+     };
 
-     }
-     this.initialize = function() {
-         for (var i = 0; i < self.filteredMarkers().length; i++) {
-             self.filteredMarkers()[i].mapMarker.setMap(map);
-         }
-         var input = document.getElementById("search-bar");
-         map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
-         //var searchBox = new google.maps.places.SearchBox(input);
-     }
-     google.maps.event.addDomListener(window, 'load', self.initialize);
- }
+
+
+ };
  var viewModel = new ViewModel();
  ko.applyBindings(viewModel);
+ viewModel.initializeMap();
  viewModel.query.subscribe(function() {
      viewModel.filter();
  });
