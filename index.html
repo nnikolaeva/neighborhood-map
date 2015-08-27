@@ -13,7 +13,7 @@
     <div class="search-box">
         <input id="search-bar" placeholder="Search by name or address" data-bind="value: query, valueUpdate: 'afterkeydown'" autofocus>
         <ul class="list-data" data-bind="foreach: filteredMarkers">
-            <li data-bind="text: name, click: showMarkerInfo"></li>
+            <li data-bind="text: name, click: activate"></li>
         </ul>
     <button class="show-list" data-bind="click: toggleListView">View list</button>
     </div>
