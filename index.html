@@ -4,20 +4,43 @@
 <head>
     <meta charset="UTF-8">
     <title>Neighborhood map</title>
+    <meta name="viewport" content="width=device-width">
     <link rel="stylesheet" type="text/css" href="css/style.css">
     <script src="https://maps.googleapis.com/maps/api/js"></script>
 </head>
 
 <body>
     <div class="search-box">
-        <input id="search-bar" placeholder="Search place by name or address" data-bind="value: query, valueUpdate: 'afterkeydown'" autofocus>
+        <input id="search-bar" placeholder="Search by name or address" data-bind="value: query, valueUpdate: 'afterkeydown'" autofocus>
         <ul class="list-data" data-bind="foreach: filteredMarkers">
             <li data-bind="text: name, click: showMarkerInfo"></li>
         </ul>
+    <button class="show-list" data-bind="click: toggleListView">View list</button>
     </div>
+
+    <div id="testTemplate"></div>
+    
 
 
     <div id="map-canvas"></div>
+
+    <template id="test"> 
+    	<h1 data-bind="text: temp"></h1>
+    </template>
+
+    <!-- <template id="info-window-template">
+    	<div class="info-window-container">
+    		<img class="info-image" src="">
+    		<div class="content">
+    			<h1 data-bind="text: temp" id="venue-name"></h1>
+    			<h2 class="venue-address"></h2>
+    			<span class="venue-rating"></span>
+    			<a class="details-link" href=""></a>
+    			<hr>
+    			<span class="review"></span>
+    		</div>
+    	</div>
+    </template> -->
     <script src="js/lib/knockout-3.3.0.js"></script>
     <script src="js/lib/jquery.min.js"></script>
     <script src="js/main.js"></script>

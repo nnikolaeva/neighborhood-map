@@ -133,27 +133,34 @@ table {
 
 html, body {
 	height: 100%;
+	width: 100%;
 	margin:0;
 	padding:0;
 	font-family: Arial, sans-serif;
 }
 #map-canvas {
     height: 100%; 
-    width: 70%;
+    width: 100%;
     background-color: #ccc;
     text-align: center; 
-    float: right;
+    /*float: right;*/
 }
 
 .search-box {
+	/*background-color: rgba(255, 255, 255, .7);*/
 	background-color: #FFF;
 	position: absolute;
 	z-index: 1;
-	width: 25%;
+	/*width: 25%;*/
+	min-width: 300px;
 	margin-top: 15px;
 	margin-left: 30px;
+	/*background-color: transparent;*/
+	/*opacity: 0.6;*/
+	
 
 }
+
 
 #search-bar {
 	width: 100%;
@@ -178,23 +185,31 @@ html, body {
 	margin: 0;
 	padding: 0;
 	display: block;
+	word-wrap: break-word;
 }
 li {
-	line-height: 22px;
+	line-height: 30px;
 	border-left: 1px solid #E6E6E6; 
 	border-bottom: 1px solid #E6E6E6; 
 	border-right: 1px solid #E6E6E6; 
-	height: 30px;
+	height: auto;
 	font-size: 14px;
-    line-height: 30px;
+    /*line-height: auto;*/
     font-weight: normal;
     padding-left: 1px;
-    text-indent: 5px;
+    /*text-indent: 5px each-line;*/
+    padding-left: 5px;
+
+
 }
 
 li:hover {
 	background-color: #F8F8F8;
 }
+
+
+
+
 
 .info-window-container {
 	/*width: 200px;*/
@@ -228,4 +243,31 @@ li:hover {
 .venue-rating {
 	font-weight: 400;
 	color: #1975FF;
+}
+
+.show-list {
+	display: none;
+}
+
+.error-message {
+	color: red;
+}
+
+@media only screen and (max-width: 800px) {
+	.info-image {
+	display: none;
+}
+
+.list-data {
+	display: none;
+}
+
+.show-list {
+	width: 100%;
+	display: block;
+}
+}
+
+.content {
+	width: 200px;
 }
