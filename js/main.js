@@ -242,19 +242,22 @@
          setMapForMarkers(map);
      };
 
-     this.isVisible = true;
      // function toggles list view visibility
      this.toggleListView = function() {
-         if (self.isVisible === true) {
+         var isVisible = $('.list-data').css('display');
+         var button;
+         console.log(isVisible);
+         if (isVisible === "block") {
              $(".list-data").hide("slow");
-             $(".show-list").text("View list");
-             self.isVisible = false;
+             $(".hide-list").hide();
+             $(".show-list").show();
+             isVisible = false;
          } else {
              $(".list-data").show("slow");
-             $(".show-list").text("Hide list");
-             self.isVisible = true;
+             $(".show-list").hide();
+             $(".hide-list").show();
+             isVisible = true;
          }
-
      };
 
  };

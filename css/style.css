@@ -147,7 +147,6 @@ html, body {
 }
 
 .search-box {
-	background-color: #FFF;
 	position: absolute;
 	z-index: 1;
 	min-width: 300px;
@@ -174,6 +173,7 @@ html, body {
 }
 
 .list-data {
+	background-color: #FFF;
 	list-style-type: none;
 	margin: 0;
 	padding: 0;
@@ -239,9 +239,6 @@ li:hover {
 .error-message {
 	color: red;
 }
-.show-list {
-	width: 100%;
-}
 
 .content {
 	width: 200px;
@@ -255,4 +252,15 @@ li:hover {
     .list-data {
 	display: none;
     }
+
+    .hide-list {
+    	display: none;
+    }
+
+}
+
+@media only screen and (min-width: 800px) {
+	.show-list {
+	display: none;
+	}
 }
