@@ -202,36 +202,44 @@ li:hover {
 	text-align: left;
 }
 
-.info-image {
+/*.info-image {
+	float: right;
+	padding-left: 10px;
+}*/
+#info-image {
 	float: right;
 	padding-left: 10px;
 }
 
-.review {
+#review {
 	font-style: italic;
 }
 
-.content {
+/*.content {
 	float: left;
+}*/
+#content {
+	float: left;
+	width: 200px;
 }
 
-.venue-name {
+#venue-name {
 	font-weight: 600;
 	color: #1975FF;
 	font-size: 15px;
 	margin-bottom: 5px;
 }
 
-.details-link {
+#details-link {
 	float: right;
 	color: #1975FF;
 }
 
-.venue-address {
+#venue-address {
 	margin-bottom: 3px;
 }
 
-.venue-rating {
+#venue-rating {
 	font-weight: 400;
 	color: #1975FF;
 }
@@ -240,12 +248,11 @@ li:hover {
 	color: red;
 }
 
-.content {
-	width: 200px;
-}
-
 @media only screen and (max-width: 800px) {
-	.info-image {
+	/*.info-image {
+	display: none;
+    }*/
+    #info-image {
 	display: none;
     }
 

@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <title>Neighborhood map</title>
     <meta name="viewport" content="width=device-width">
-    <link rel="stylesheet" type="text/css" href="dist/css/style.css">
+    <link rel="stylesheet" type="text/css" href="css/style.css">
     <script src="https://maps.googleapis.com/maps/api/js"></script>
 </head>
 
@@ -20,11 +20,24 @@
     </div>
     <div>
     </div>
+
     <div id="map-canvas"></div>
+
+    <template id="inforWindowTemplate">
+    	<img id="info-image" src="">
+    	<div id="content">
+    		<h1 id="venue-name"></h1>
+    		<h2 id="venue-address"></h2>
+    		<span id="venue-rating"></span>
+    		<a id="details-link" href="">View details</a>
+    		<hr>
+    		<span id="review"></span>
+    	</div>
+    </template>
 
     <script src="js/lib/knockout-3.3.0.js"></script>
     <script src="js/lib/jquery.min.js"></script>
-    <script src="dist/js/main.js"></script>
+    <script src="js/main.js"></script>
 </body>
 
 </html>

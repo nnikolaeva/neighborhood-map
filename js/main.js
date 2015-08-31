@@ -47,12 +47,12 @@
      this.lat = place.lat;
      this.lng = place.lng;
      this.iconType = place.iconType;
-     this.infoWindow = null;
+     this.infoWindowContent = null;
      this.mapMarker = null;
      this.activate = null;
-     this.setInfoWindow = function(infowindow) {
-         this.infoWindow = infowindow;
-     };
+     this.setInfoWindowContent = function(content) {
+     	this.infoWindowContent = content;
+     }
      this.setMapMarker = function(mapMarker) {
          this.mapMarker = mapMarker;
      };
@@ -70,7 +70,7 @@
      this.markers = ko.observableArray([]);
      this.filteredMarkers = ko.observableArray([]);
      this.query = ko.observable("");
-
+     var infowindow;
      this.initializeMap = function() {
          // create marker for each place
          places.forEach(function(item) {
@@ -103,6 +103,7 @@
          window.addEventListener('resize', function(e) {
              map.fitBounds(mapBounds);
          });
+         infowindow = new google.maps.InfoWindow();
      };
      // create google maps markers and set them on the map
      this.initializeMarkers = function() {
@@ -132,8 +133,9 @@
              marker.mapMarker.setAnimation(null);
          }, 1400);
 
-         if (marker.infoWindow !== null) {
-             marker.infoWindow.open(map, marker.mapMarker);
+         if (marker.infoWindowContent !== null) {
+         	 infowindow.setContent(marker.infoWindowContent);
+             infowindow.open(map, marker.mapMarker);
          } else {
              var markerLocation = marker.lat + "," + marker.lng;
              var imageUrl = "https://maps.googleapis.com/maps/api/streetview?size=100x100&location=" + markerLocation;
@@ -156,57 +158,30 @@
 
          }
      }
-
      function createInfoWindow(marker, image, venue) {
-         // create info window content
+        var venueAddress = venue.location.address + ", " + venue.location.city + ", " + venue.location.postalCode + ", " + venue.location.state;
+        var venueRating = "Rating: " + venue.rating + "/10";
+
          var container = document.createElement('div');
          container.setAttribute("class", "info-window-container");
-         $('<img>', {
-             class: "info-image",
-             src: '' + image
-         }).appendTo(container);
 
-         var content = $('<div>', {
-             class: "content"
-         }).appendTo(container);
+         var templateContent = document.getElementById("inforWindowTemplate").content;
+         templateContent.getElementById("info-image").src = image;
+        templateContent.getElementById("venue-name").innerHTML = venue.name;
+        templateContent.getElementById("venue-address").innerHTML = venueAddress;
+        templateContent.getElementById("venue-rating").innerHTML = venueRating;
+        templateContent.getElementById("details-link").href = venueRating;
+		if (venue.hasOwnProperty("phrases")) {
+			 templateContent.getElementById("review").innerHTML = venue.phrases[0].sample.text;
+		}
 
-         $('<h1>', {
-             class: "venue-name",
-             text: '' + venue.name
-         }).appendTo(content);
+         var clone = document.importNode(templateContent, true);
+         container.appendChild(clone);
 
-         var venueAddress = venue.location.address + ", " + venue.location.city + ", " + venue.location.postalCode + ", " + venue.location.state;
-         $('<h2>', {
-             class: "venue-address",
-             text: '' + venueAddress
-         }).appendTo(content);
-
-         var text = "Rating: " + venue.rating + "/10";
-         $('<span>', {
-             class: "venue-rating",
-             text: '' + text
-         }).appendTo(content);
-
-         $('<a>', {
-             class: "details-link",
-             href: '' + venue.canonicalUrl,
-             text: "View details"
-         }).appendTo(content);
-
-         if (venue.hasOwnProperty("phrases")) {
-             $('<hr>').appendTo(content);
-             $('<span>', {
-                 class: "review",
-                 text: '' + venue.phrases[0].sample.text
-             }).appendTo(content);
-
-         }
-         // create info window
-         var infowindow = new google.maps.InfoWindow({
-             content: container
-         });
          // set info window to Marker class instance 
-         marker.setInfoWindow(infowindow);
+         marker.setInfoWindowContent(container);
+         // set content to infoWindow object
+         infowindow.setContent(container);
          // open created info window on the map
          infowindow.open(map, marker.mapMarker);
      }
