@@ -80,12 +80,12 @@ time,
 mark,
 audio,
 video {
-	margin: 0;
-	padding: 0;
-	border: 0;
-	font-size: 100%;
-	font: inherit;
-	vertical-align: baseline;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: 100%;
+    font: inherit;
+    vertical-align: baseline;
 }
 
 /* HTML5 display-role reset for older browsers */
@@ -100,174 +100,179 @@ hgroup,
 menu,
 nav,
 section {
-	display: block;
+    display: block;
 }
 
 body {
-	line-height: 1;
+    line-height: 1;
 }
 
 ol,
 ul {
-	list-style: none;
+    list-style: none;
 }
 
 blockquote,
 q {
-	quotes: none;
+    quotes: none;
 }
 
 blockquote:before,
 blockquote:after,
 q:before,
 q:after {
-	content: '';
-	content: none;
+    content: '';
+    content: none;
 }
 
 table {
-	border-collapse: collapse;
-	border-spacing: 0;
+    border-collapse: collapse;
+    border-spacing: 0;
 }
 
-
-html, body {
-	height: 100%;
-	width: 100%;
-	margin:0;
-	padding:0;
-	font-family: Arial, sans-serif;
+html,
+body {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    font-size: 0.9em;
 }
 
 #map-canvas {
-    height: 100%; 
+    height: 100%;
     width: 100%;
     background-color: #ccc;
-    text-align: center; 
+    text-align: center;
 }
 
 .search-box {
-	position: absolute;
-	z-index: 1;
-	min-width: 300px;
-	margin-top: 15px;
-	margin-left: 30px;
+    position: absolute;
+    z-index: 1;
+    min-width: 300px;
+    margin-top: 15px;
+    margin-left: 30px;
 }
 
 #search-bar {
-	width: 100%;
-	height: 30px;
-	font-size: 14px;
+    width: 100%;
+    height: 30px;
     line-height: 20px;
     font-weight: 100;
     box-sizing: border-box;
-    border: 1px solid #E6E6E6;
+    border: 1px solid #e6e6e6;
     border-radius: 2px 0 0 2px;
     outline: none;
     box-shadow: inset 1px 1px 5px -2px #000;
     text-indent: 5px;
-
 }
+
 #search-bar:focus {
-	border: 1px solid #0099FF;
+    border: 1px solid #0099ff;
 }
 
 .list-data {
-	background-color: #FFF;
-	list-style-type: none;
-	margin: 0;
-	padding: 0;
-	display: block;
-	word-wrap: break-word;
+    background-color: #fff;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    display: block;
+    word-wrap: break-word;
 }
+
 li {
-	line-height: 30px;
-	border-left: 1px solid #E6E6E6; 
-	border-bottom: 1px solid #E6E6E6; 
-	border-right: 1px solid #E6E6E6; 
-	height: auto;
-	font-size: 14px;
-    /*line-height: auto;*/
+    line-height: 30px;
+    border-left: 1px solid #e6e6e6;
+    border-bottom: 1px solid #e6e6e6;
+    border-right: 1px solid #e6e6e6;
+    height: auto;
     font-weight: normal;
     padding-left: 1px;
-    /*text-indent: 5px each-line;*/
     padding-left: 5px;
 }
 
 li:hover {
-	background-color: #F8F8F8;
+    background-color: #f8f8f8;
 }
 
 .info-window-container {
-	text-align: left;
+    text-align: left;
+    font-size: 1em;
 }
 
-/*.info-image {
-	float: right;
-	padding-left: 10px;
-}*/
 #info-image {
-	float: right;
-	padding-left: 10px;
+    float: right;
+    padding-left: 10px;
 }
 
 #review {
-	font-style: italic;
+    font-style: italic;
 }
 
-/*.content {
-	float: left;
-}*/
 #content {
-	float: left;
-	width: 200px;
+    float: left;
+    width: 200px;
 }
 
 #venue-name {
-	font-weight: 600;
-	color: #1975FF;
-	font-size: 15px;
-	margin-bottom: 5px;
+    font-weight: 600;
+    color: #1975ff;
+    font-size: 1.2em;
+    margin-bottom: 5px;
 }
 
 #details-link {
-	float: right;
-	color: #1975FF;
+    float: right;
+    color: #1975ff;
 }
 
 #venue-address {
-	margin-bottom: 3px;
+    margin-bottom: 3px;
 }
 
 #venue-rating {
-	font-weight: 400;
-	color: #1975FF;
+    font-weight: 400;
+    color: #1975ff;
 }
 
 .error-message {
-	color: red;
+    color: red;
+}
+
+.show-list,
+.hide-list {
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    background-color: #fff;
+    width: 48px;
+    height: 25px;
 }
 
 @media only screen and (max-width: 800px) {
-	/*.info-image {
-	display: none;
-    }*/
     #info-image {
-	display: none;
+        display: none;
     }
 
     .list-data {
-	display: none;
+        display: none;
     }
 
     .hide-list {
-    	display: none;
+        display: none;
     }
 
+    .info-window-container {
+        font-size: 0.8em;
+    }
+
+    #venue-name {
+        font-size: 1em;
+    }
 }
 
 @media only screen and (min-width: 800px) {
-	.show-list {
-	display: none;
-	}
+    .show-list {
+        display: none;
+    }
 }
