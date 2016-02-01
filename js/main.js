@@ -100,12 +100,15 @@ var ViewModel = function() {
             zoomControlOptions: {
                 position: google.maps.ControlPosition.RIGHT_TOP
             },
+            mapTypeControlOptions: {
+            position: google.maps.ControlPosition.TOP_CENTER
+            },
             scaleControl: true
         };
         map = new google.maps.Map(mapCanvas, mapOptions);
         // create boundaries for the map
-        var sw = new google.maps.LatLng(37.3989458, -122.1107519);
-        var ne = new google.maps.LatLng(37.4024914, -122.0527303);
+        var sw = new google.maps.LatLng(37.369158, -122.115449);
+        var ne = new google.maps.LatLng(37.436600, -121.992621);
         var mapBounds = new google.maps.LatLngBounds(sw, ne);
         map.fitBounds(mapBounds);
         // resize map if window is resized
@@ -152,17 +155,94 @@ var ViewModel = function() {
             var CLIENT_SECRET = "5KVONUBGB0YJZJFMTAIXKGCMRB15KEVAGRY2YWMCCZF03EXC";
             var compactVenueUrl = "https://api.foursquare.com/v2/venues/search?client_id=" + CLIENT_ID + "&client_secret=" + CLIENT_SECRET + "&v=20130815&query=" + marker.name + "&intent=match&ll=" + markerLocation;
             // get data to fill in info window from foursquare api
-            $.getJSON(compactVenueUrl, function(data) {
-                    var venueDetailUrl = "https://api.foursquare.com/v2/venues/" + data.response.venues[0].id + "?client_id=" + CLIENT_ID + "&client_secret=" + CLIENT_SECRET + "&v=20130815";
-                    $.getJSON(venueDetailUrl, function(data) {
-                        createInfoWindow(marker, imageUrl, data.response.venue);
-                    }).error(function() {
-                        createInfoWindowWithErrorMessage(marker);
-                    });
-                })
-                .error(function() {
+            // $.getJSON(compactVenueUrl, function(data) {
+            //         var venueDetailUrl = "https://api.foursquare.com/v2/venues/" + data.response.venues[0].id + "?client_id=" + CLIENT_ID + "&client_secret=" + CLIENT_SECRET + "&v=20130815";
+            //         $.getJSON(venueDetailUrl, function(data) {
+            //             createInfoWindow(marker, imageUrl, data.response.venue);
+            //         }).error(function() {
+            //             createInfoWindowWithErrorMessage(marker);
+            //         });
+            //     })
+            //     .error(function() {
+            //         createInfoWindowWithErrorMessage(marker);
+            //     });
+            // vanila javascript
+            var xmlhttp = new XMLHttpRequest();
+            xmlhttp.onreadystatechange = function() {
+              if (this.readyState == 4 && this.status == 200) {
+                var data = JSON.parse(this.responseText);
+                var venueDetailUrl = "https://api.foursquare.com/v2/venues/" + data.response.venues[0].id + "?client_id=" + CLIENT_ID + "&client_secret=" + CLIENT_SECRET + "&v=20130815";
+                sendAnotherRequest(venueDetailUrl);
+              }  else if (this.readyState == 4 && this.status !== 200) {
                     createInfoWindowWithErrorMessage(marker);
-                });
+              }
+            };
+            xmlhttp.open("GET", compactVenueUrl, true);
+            xmlhttp.send();
+            function sendAnotherRequest(url) {
+                xmlhttp.onreadystatechange = function() {
+                if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                    var data = JSON.parse(xmlhttp.responseText);
+                    createInfoWindow(marker, imageUrl, data.response.venue);
+                }  else if (xmlhttp.readyState == 4 && xmlhttp.status !== 200) {
+                    createInfoWindowWithErrorMessage(marker);
+              }
+                    
+                }
+            xmlhttp.open("GET", url, true);
+            xmlhttp.send();
+            }
+
+            // javascript promises
+        //     var promise = new Promise(function(resolve, reject) {
+        //         var xmlhttp = new XMLHttpRequest();
+        //         xmlhttp.open("GET", compactVenueUrl, true);
+        //         xmlhttp.onreadystatechange = function() {
+        //           if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+        //             var data = JSON.parse(xmlhttp.responseText);
+        //             resolve(data);
+        //         }  else if (xmlhttp.readyState == 4 && xmlhttp.status !== 200) {
+        //             reject(data);
+        //         }
+        //     };
+        //     xmlhttp.send();
+
+        // });
+            //chaining promises
+            // function ajaxRequest(url) {
+            //     var promise = new Promise(function(resolve, reject) {
+            //         var xmlhttp = new XMLHttpRequest();
+            //         xmlhttp.open("GET", url, true);
+            //         xmlhttp.send();
+            //         xmlhttp.onreadystatechange = function() {
+            //           if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+            //             var data = JSON.parse(xmlhttp.responseText);
+            //             resolve(data);
+            //         }  else if (xmlhttp.readyState == 4 && xmlhttp.status !== 200) {
+            //             reject(data);
+            //         }
+            //     };
+
+            // });
+            //     return promise;
+            // }
+
+            // ajaxRequest(compactVenueUrl)
+            // .then(getVenueDetails, failCallback)
+            // .then(successCallback, failCallback);
+
+            // function failCallback() {
+            //     createInfoWindowWithErrorMessage(marker);
+            // }
+            // function successCallback(data) {
+            //     createInfoWindow(marker, imageUrl, data.response.venue);
+            // }
+            // function getVenueDetails(data) {
+            //     var venueDetailUrl = "https://api.foursquare.com/v2/venues/" + data.response.venues[0].id + "?client_id=" + CLIENT_ID + "&client_secret=" + CLIENT_SECRET + "&v=20130815";
+            //     return ajaxRequest(venueDetailUrl);
+            // }
+
+
 
 
         }
@@ -171,6 +251,7 @@ var ViewModel = function() {
     function createInfoWindow(marker, image, venue) {
         var venueAddress = venue.location.address + ", " + venue.location.city + ", " + venue.location.postalCode + ", " + venue.location.state;
         var venueRating = "Rating: " + venue.rating + "/10";
+        var detailsLink = venue.canonicalUrl;
         //create a div container for info window
         var container = document.createElement('div');
         container.setAttribute("class", "info-window-container");
@@ -181,7 +262,7 @@ var ViewModel = function() {
         templateContent.getElementById("venue-name").innerHTML = venue.name;
         templateContent.getElementById("venue-address").innerHTML = venueAddress;
         templateContent.getElementById("venue-rating").innerHTML = venueRating;
-        templateContent.getElementById("details-link").href = venueRating;
+        templateContent.getElementById("details-link").href = detailsLink;
         if (venue.hasOwnProperty("phrases")) {
             templateContent.getElementById("review").innerHTML = venue.phrases[0].sample.text;
         }
