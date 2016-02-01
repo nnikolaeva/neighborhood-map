@@ -5,7 +5,7 @@ Technologies used: JavaScript, Knockout JS, jQuery, AJAX, CSS, HTML5, gulp, Goog
 ####HOW TO RUN THE APPLICATION
 
 1. Download all files and open index.html in your favorite browser.
-2. Or view the application on http://nnikolaeva.github.io/Local-business-discovery/
+2. Or view the application on http://nnikolaeva.github.io/Local-business-discovery
 
 ####BUILD TOOL
 
