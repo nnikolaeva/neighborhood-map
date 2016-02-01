@@ -1,9 +1,11 @@
 ## Neighborhood Map project
+Interactive application for local business discovery with third-party APIs integration for additional business information
+Technologies used: JavaScript, Knockout JS, jQuery, AJAX, CSS, HTML5, gulp, Google Maps API, Foursquare API.
 
 ####HOW TO RUN THE APPLICATION
 
-1. Download all files.
-2. Open index.html in your favorite browser.
+1. Download all files and open index.html in your favorite browser.
+2. Or view the application on http://nnikolaeva.github.io/Local-business-discovery/
 
 ####BUILD TOOL
 
@@ -16,11 +18,8 @@
 
 
 ####HOW TO USE APPLICATION
-1. Application uses the following APIs: google maps ,google streetview, foursquare
-2. Click on any marker on the map to view animated marker and the detail info from foursquare API and google streetview
-3. Click on any item in list view to view animated marker and the detail info from foursquare API and google streetview
-4. Enter partial or full name of the place in the search bar to filter both the locations in the list view and markers on the map
-5. Enter partial or full address of the place in the search bar to filter both the locations in the list view and markers on the map
-
-
+1. Click on any marker on the map to view animated marker and the detail info from foursquare API and google streetview
+2. Click on any item in list view to view animated marker and the detail info from foursquare API and google streetview
+3. Enter partial or full name of the place in the search bar to filter both the locations in the list view and markers on the map
+4. Enter partial or full address of the place in the search bar to filter both the locations in the list view and markers on the map
 

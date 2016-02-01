@@ -101,7 +101,7 @@ var ViewModel = function() {
                 position: google.maps.ControlPosition.RIGHT_TOP
             },
             mapTypeControlOptions: {
-            position: google.maps.ControlPosition.TOP_CENTER
+                position: google.maps.ControlPosition.TOP_CENTER
             },
             scaleControl: true
         };
@@ -169,45 +169,46 @@ var ViewModel = function() {
             // vanila javascript
             var xmlhttp = new XMLHttpRequest();
             xmlhttp.onreadystatechange = function() {
-              if (this.readyState == 4 && this.status == 200) {
-                var data = JSON.parse(this.responseText);
-                var venueDetailUrl = "https://api.foursquare.com/v2/venues/" + data.response.venues[0].id + "?client_id=" + CLIENT_ID + "&client_secret=" + CLIENT_SECRET + "&v=20130815";
-                sendAnotherRequest(venueDetailUrl);
-              }  else if (this.readyState == 4 && this.status !== 200) {
+                if (this.readyState == 4 && this.status == 200) {
+                    var data = JSON.parse(this.responseText);
+                    var venueDetailUrl = "https://api.foursquare.com/v2/venues/" + data.response.venues[0].id + "?client_id=" + CLIENT_ID + "&client_secret=" + CLIENT_SECRET + "&v=20130815";
+                    sendAnotherRequest(venueDetailUrl);
+                } else if (this.readyState == 4 && this.status !== 200) {
                     createInfoWindowWithErrorMessage(marker);
-              }
+                }
             };
             xmlhttp.open("GET", compactVenueUrl, true);
             xmlhttp.send();
+
             function sendAnotherRequest(url) {
                 xmlhttp.onreadystatechange = function() {
-                if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-                    var data = JSON.parse(xmlhttp.responseText);
-                    createInfoWindow(marker, imageUrl, data.response.venue);
-                }  else if (xmlhttp.readyState == 4 && xmlhttp.status !== 200) {
-                    createInfoWindowWithErrorMessage(marker);
-              }
-                    
-                }
-            xmlhttp.open("GET", url, true);
-            xmlhttp.send();
+                    if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                        var data = JSON.parse(xmlhttp.responseText);
+                        createInfoWindow(marker, imageUrl, data.response.venue);
+                    } else if (xmlhttp.readyState == 4 && xmlhttp.status !== 200) {
+                        createInfoWindowWithErrorMessage(marker);
+                    }
+
+                };
+                xmlhttp.open("GET", url, true);
+                xmlhttp.send();
             }
 
             // javascript promises
-        //     var promise = new Promise(function(resolve, reject) {
-        //         var xmlhttp = new XMLHttpRequest();
-        //         xmlhttp.open("GET", compactVenueUrl, true);
-        //         xmlhttp.onreadystatechange = function() {
-        //           if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-        //             var data = JSON.parse(xmlhttp.responseText);
-        //             resolve(data);
-        //         }  else if (xmlhttp.readyState == 4 && xmlhttp.status !== 200) {
-        //             reject(data);
-        //         }
-        //     };
-        //     xmlhttp.send();
+            //     var promise = new Promise(function(resolve, reject) {
+            //         var xmlhttp = new XMLHttpRequest();
+            //         xmlhttp.open("GET", compactVenueUrl, true);
+            //         xmlhttp.onreadystatechange = function() {
+            //           if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+            //             var data = JSON.parse(xmlhttp.responseText);
+            //             resolve(data);
+            //         }  else if (xmlhttp.readyState == 4 && xmlhttp.status !== 200) {
+            //             reject(data);
+            //         }
+            //     };
+            //     xmlhttp.send();
 
-        // });
+            // });
             //chaining promises
             // function ajaxRequest(url) {
             //     var promise = new Promise(function(resolve, reject) {
