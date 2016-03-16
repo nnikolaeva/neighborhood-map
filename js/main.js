@@ -1,43 +1,10 @@
 /* main.js
- * The file contains array of hardcoded place objects, 
  * Marker class which stores marker's information 
  * and ViewModel class, which contains all business logic.
  * author: Natalia Nikolaeva
  * data: Aug 31 2015
  */
 "use strict";
-var places = [{
-    name: "Clocktower Coffee Roasting Co.",
-    address: "205 E Middlefield Rd #1A Mountain View, CA 94043",
-    lat: 37.3970472,
-    lng: -122.0617372,
-    iconType: "coffee"
-}, {
-    name: "Sufi Coffee Shop",
-    address: "815 W El Camino Real Mountain View, CA 94040",
-    lat: 37.385884,
-    lng: -122.0847306,
-    iconType: "coffee"
-}, {
-    name: "Oh My Sushi",
-    address: "2595 California St Mountain View, CA 94040",
-    lat: 37.4053954,
-    lng: -122.1107026,
-    iconType: "sushi"
-}, {
-    name: "Hon Sushi",
-    address: "1477 Plymouth St Mountain View, CA 94043",
-    lat: 37.4163068,
-    lng: -122.0795238,
-    iconType: "sushi"
-}, {
-    name: "Satsuma Sushi",
-    address: "705 E El Camino Real Mountain View, CA 94040",
-    lat: 37.3755308,
-    lng: -122.0638239,
-    iconType: "sushi"
-}];
-
 var icons = {
     sushi: {
         icon: "dist/images/sushi.png"
@@ -54,6 +21,7 @@ var Marker = function(place) {
     self.lat = place.lat;
     self.lng = place.lng;
     self.iconType = place.iconType;
+    self.id = place.id;
     self.infoWindowContent = null;
     self.mapMarker = null;
     self.activate = null;
@@ -108,7 +76,9 @@ var ViewModel = function() {
         map = new google.maps.Map(mapCanvas, mapOptions);
         // create boundaries for the map
         var sw = new google.maps.LatLng(37.369158, -122.115449);
-        var ne = new google.maps.LatLng(37.436600, -121.992621);
+        // var sw = new google.maps.LatLng(37.331507,-122.1974397);
+        var ne = new google.maps.LatLng(37.445802,-121.9801157);
+        // var ne = new google.maps.LatLng(37.436600, -121.992621);
         var mapBounds = new google.maps.LatLngBounds(sw, ne);
         map.fitBounds(mapBounds);
         // resize map if window is resized
@@ -155,44 +125,20 @@ var ViewModel = function() {
             var CLIENT_SECRET = "5KVONUBGB0YJZJFMTAIXKGCMRB15KEVAGRY2YWMCCZF03EXC";
             var compactVenueUrl = "https://api.foursquare.com/v2/venues/search?client_id=" + CLIENT_ID + "&client_secret=" + CLIENT_SECRET + "&v=20130815&query=" + marker.name + "&intent=match&ll=" + markerLocation;
             // get data to fill in info window from foursquare api
-            // $.getJSON(compactVenueUrl, function(data) {
-            //         var venueDetailUrl = "https://api.foursquare.com/v2/venues/" + data.response.venues[0].id + "?client_id=" + CLIENT_ID + "&client_secret=" + CLIENT_SECRET + "&v=20130815";
-            //         $.getJSON(venueDetailUrl, function(data) {
-            //             createInfoWindow(marker, imageUrl, data.response.venue);
-            //         }).error(function() {
-            //             createInfoWindowWithErrorMessage(marker);
-            //         });
-            //     })
-            //     .error(function() {
-            //         createInfoWindowWithErrorMessage(marker);
-            //     });
-            // vanila javascript
+            var venueDetailUrl = "https://api.foursquare.com/v2/venues/" + marker.id + "?client_id=" + CLIENT_ID + "&client_secret=" + CLIENT_SECRET + "&v=20130815";
             var xmlhttp = new XMLHttpRequest();
-            xmlhttp.onreadystatechange = function() {
-                if (this.readyState == 4 && this.status == 200) {
-                    var data = JSON.parse(this.responseText);
-                    var venueDetailUrl = "https://api.foursquare.com/v2/venues/" + data.response.venues[0].id + "?client_id=" + CLIENT_ID + "&client_secret=" + CLIENT_SECRET + "&v=20130815";
-                    sendAnotherRequest(venueDetailUrl);
-                } else if (this.readyState == 4 && this.status !== 200) {
-                    createInfoWindowWithErrorMessage(marker);
-                }
-            };
-            xmlhttp.open("GET", compactVenueUrl, true);
-            xmlhttp.send();
-
-            function sendAnotherRequest(url) {
-                xmlhttp.onreadystatechange = function() {
+             xmlhttp.onreadystatechange = function() {
                     if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
                         var data = JSON.parse(xmlhttp.responseText);
+                        console.log(imageUrl);
                         createInfoWindow(marker, imageUrl, data.response.venue);
                     } else if (xmlhttp.readyState == 4 && xmlhttp.status !== 200) {
                         createInfoWindowWithErrorMessage(marker);
                     }
 
                 };
-                xmlhttp.open("GET", url, true);
+                xmlhttp.open("GET", venueDetailUrl, true);
                 xmlhttp.send();
-            }
 
             // javascript promises
             //     var promise = new Promise(function(resolve, reject) {
@@ -250,7 +196,7 @@ var ViewModel = function() {
     }
 
     function createInfoWindow(marker, image, venue) {
-        var venueAddress = venue.location.address + ", " + venue.location.city + ", " + venue.location.postalCode + ", " + venue.location.state;
+        var venueAddress = marker.address;
         var venueRating = "Rating: " + venue.rating + "/10";
         var detailsLink = venue.canonicalUrl;
         //create a div container for info window
@@ -260,7 +206,7 @@ var ViewModel = function() {
         // fill in template content
         var templateContent = document.getElementById("inforWindowTemplate").content;
         templateContent.getElementById("info-image").src = image;
-        templateContent.getElementById("venue-name").innerHTML = venue.name;
+        templateContent.getElementById("venue-name").innerHTML = marker.name;
         templateContent.getElementById("venue-address").innerHTML = venueAddress;
         templateContent.getElementById("venue-rating").innerHTML = venueRating;
         templateContent.getElementById("details-link").href = detailsLink;
@@ -328,10 +274,49 @@ var ViewModel = function() {
     };
 
 };
-var viewModel = new ViewModel();
-ko.applyBindings(viewModel);
-viewModel.initializeMap();
-viewModel.initializeMarkers();
-viewModel.query.subscribe(function() {
-    viewModel.filter();
-});
+
+function createAddressString(l) {
+    var res = l.address + " " + l.city + ", " + l.state + " " + l.postalCode;
+    return res;
+}
+var CLIENT_ID = "O4L3T0YIVRWVHCWIQ1Y1UHUXUDRBQ3S4AXKT4ZIQTSIKQMNN";
+var CLIENT_SECRET = "5KVONUBGB0YJZJFMTAIXKGCMRB15KEVAGRY2YWMCCZF03EXC";
+var newurl = "https://api.foursquare.com/v2/venues/search?client_id=" + CLIENT_ID + "&client_secret=" + CLIENT_SECRET + "&v=20130815&near=Mountain View, CA&query=coffee";
+var places = [];
+var xmlhttp = new XMLHttpRequest();
+xmlhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+        var data = JSON.parse(this.responseText);
+        var p = data.response.venues;
+        console.log(p);
+        for (var i in p) {
+            places.push({name : p[i].name,
+    address: createAddressString(p[i].location),
+    lat: p[i].location.lat,
+    lng: p[i].location.lng,
+    id: p[i].id,
+    iconType: "coffee"})
+        }
+        console.log(places);
+        var viewModel = new ViewModel();
+        ko.applyBindings(viewModel);
+        viewModel.initializeMap();
+        viewModel.initializeMarkers();
+        viewModel.query.subscribe(function() {
+            viewModel.filter();
+        });
+    } else if (this.readyState == 4 && this.status !== 200) {
+        console.log("error");
+    }
+};
+xmlhttp.open("GET", newurl, true);
+xmlhttp.send();
+
+
+// var viewModel = new ViewModel();
+// ko.applyBindings(viewModel);
+// viewModel.initializeMap();
+// viewModel.initializeMarkers();
+// viewModel.query.subscribe(function() {
+//     viewModel.filter();
+// });
