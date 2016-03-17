@@ -4,7 +4,7 @@ Technologies used: JavaScript, Knockout JS, jQuery, AJAX, CSS, HTML5, gulp, Goog
 
 ### How to run
 
-Open http://nnikolaeva.github.io/Local-business-discovery
+Open http://nnikolaeva.github.io/neighborhood-map.
 
 ### How to use
  * Select any item on the map or in the list to view the details about the selected place from Foursquare API and Google Street View.
