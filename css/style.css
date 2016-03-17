@@ -136,7 +136,6 @@ body {
     width: 100%;
     margin: 0;
     padding: 0;
-    /*font-family: Arial, sans-serif;*/
     font-family: 'Roboto', sans-serif;
     font-size: 0.9em;
 }
@@ -154,7 +153,6 @@ body {
     width: 20%;
     height: 100%;
     overflow: scroll;
-    min-width: 400px;
 }
 
 #search-bar {
@@ -168,6 +166,10 @@ body {
     position: fixed;
     font-size: 15px;
     background-color: #f8f8f8;
+    border-top: none;
+    border-right: none;
+    border-bottom: 1px solid  #e6e6e6;
+    border-left: none; 
 }
 
 .list-data {
@@ -261,6 +263,20 @@ li:hover {
     width: 48px;
     height: 25px;
 }
+
+#venues-error-message {
+    color: red;
+    padding: 15px;
+}
+
+.hidden {
+    display: none;
+}
+
+.visible {
+    display: block;
+}
+
 
 @media only screen and (max-width: 800px) {
     #info-image {

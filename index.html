@@ -5,24 +5,25 @@
     <meta charset="UTF-8">
     <title>Neighborhood map</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="dist/css/style.css">
     <script src="https://maps.googleapis.com/maps/api/js"></script>
     <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
 </head>
 
 <body>
-        <div class="search-box">
-                <input id="search-bar" placeholder="Search by Name or Address" data-bind="value: query, valueUpdate: 'afterkeydown'" autofocus>
-        
+    <div class="search-box">
+        <input id="search-bar" placeholder="Search by Name or Address" data-bind="value: query, valueUpdate: 'afterkeydown'" autofocus>
+
         <ul class="list-data" data-bind="foreach: filteredMarkers">
             <li data-bind="click: activate">
                 <h1 data-bind="text: name"></h1>
                 <h2 data-bind="text: address"></h2>
             </li>
         </ul>
-        </div>
-    
-    
+        <div id="venues-error-message" class="hidden">
+            <h1>Failed to load venues from foursquare server</h1></div>
+    </div>
+
     <div id="map-canvas"></div>
 
     <template id="inforWindowTemplate">
@@ -39,7 +40,7 @@
 
     <script src="js/lib/knockout-3.3.0.js"></script>
     <script src="js/lib/jquery.min.js"></script>
-    <script src="js/main.js"></script>
+    <script src="dist/js/main.js"></script>
 </body>
 
 </html>

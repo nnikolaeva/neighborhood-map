@@ -5,6 +5,12 @@
  * data: Aug 31 2015
  */
 "use strict";
+var CLIENT_ID = "O4L3T0YIVRWVHCWIQ1Y1UHUXUDRBQ3S4AXKT4ZIQTSIKQMNN";
+var CLIENT_SECRET = "5KVONUBGB0YJZJFMTAIXKGCMRB15KEVAGRY2YWMCCZF03EXC";
+var COFFEE_IN_MTV_URL = "https://api.foursquare.com/v2/venues/search?client_id=" + CLIENT_ID + "&client_secret=" + CLIENT_SECRET + "&v=20130815&near=Mountain View, CA&query=coffee";
+var SUSHI_IN_MTV_URL = "https://api.foursquare.com/v2/venues/search?client_id=" + CLIENT_ID + "&client_secret=" + CLIENT_SECRET + "&v=20130815&near=Mountain View, CA&query=sushi";
+var places = [];
+
 var icons = {
     sushi: {
         icon: "dist/images/sushi.png"
@@ -48,15 +54,6 @@ var ViewModel = function() {
     self.query = ko.observable("");
     var infowindow;
     self.initializeMap = function() {
-        // create marker for each place
-        places.forEach(function(item) {
-            self.markers.push(new Marker(item));
-        });
-        markersLength = self.markers().length;
-        // create copy of existing markers to use it for filtering
-        for (var i = 0; i < markersLength; i++) {
-            self.filteredMarkers.push(self.markers()[i]);
-        }
         // create the map
         var mapCanvas = document.getElementById('map-canvas');
         var mapOptions = {
@@ -77,7 +74,7 @@ var ViewModel = function() {
         // create boundaries for the map
         var sw = new google.maps.LatLng(37.369158, -122.115449);
         // var sw = new google.maps.LatLng(37.331507,-122.1974397);
-        var ne = new google.maps.LatLng(37.445802,-121.9801157);
+        var ne = new google.maps.LatLng(37.445802, -121.9801157);
         // var ne = new google.maps.LatLng(37.436600, -121.992621);
         var mapBounds = new google.maps.LatLngBounds(sw, ne);
         map.fitBounds(mapBounds);
@@ -89,6 +86,15 @@ var ViewModel = function() {
     };
     // create google maps markers and set them on the map
     self.initializeMarkers = function() {
+        // create marker for each place
+        places.forEach(function(item) {
+            self.markers.push(new Marker(item));
+        });
+        markersLength = self.markers().length;
+        // create copy of existing markers to use it for filtering
+        for (var i = 0; i < markersLength; i++) {
+            self.filteredMarkers.push(self.markers()[i]);
+        }
         for (var i = 0; i < markersLength; i++) {
             var marker = self.markers()[i];
             var mapMarker = new google.maps.Marker({
@@ -121,76 +127,20 @@ var ViewModel = function() {
         } else {
             var markerLocation = marker.lat + "," + marker.lng;
             var imageUrl = "https://maps.googleapis.com/maps/api/streetview?size=100x100&location=" + markerLocation;
-            var CLIENT_ID = "O4L3T0YIVRWVHCWIQ1Y1UHUXUDRBQ3S4AXKT4ZIQTSIKQMNN";
-            var CLIENT_SECRET = "5KVONUBGB0YJZJFMTAIXKGCMRB15KEVAGRY2YWMCCZF03EXC";
             var compactVenueUrl = "https://api.foursquare.com/v2/venues/search?client_id=" + CLIENT_ID + "&client_secret=" + CLIENT_SECRET + "&v=20130815&query=" + marker.name + "&intent=match&ll=" + markerLocation;
             // get data to fill in info window from foursquare api
             var venueDetailUrl = "https://api.foursquare.com/v2/venues/" + marker.id + "?client_id=" + CLIENT_ID + "&client_secret=" + CLIENT_SECRET + "&v=20130815";
             var xmlhttp = new XMLHttpRequest();
-             xmlhttp.onreadystatechange = function() {
-                    if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-                        var data = JSON.parse(xmlhttp.responseText);
-                        console.log(imageUrl);
-                        createInfoWindow(marker, imageUrl, data.response.venue);
-                    } else if (xmlhttp.readyState == 4 && xmlhttp.status !== 200) {
-                        createInfoWindowWithErrorMessage(marker);
-                    }
-
-                };
-                xmlhttp.open("GET", venueDetailUrl, true);
-                xmlhttp.send();
-
-            // javascript promises
-            //     var promise = new Promise(function(resolve, reject) {
-            //         var xmlhttp = new XMLHttpRequest();
-            //         xmlhttp.open("GET", compactVenueUrl, true);
-            //         xmlhttp.onreadystatechange = function() {
-            //           if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-            //             var data = JSON.parse(xmlhttp.responseText);
-            //             resolve(data);
-            //         }  else if (xmlhttp.readyState == 4 && xmlhttp.status !== 200) {
-            //             reject(data);
-            //         }
-            //     };
-            //     xmlhttp.send();
-
-            // });
-            //chaining promises
-            // function ajaxRequest(url) {
-            //     var promise = new Promise(function(resolve, reject) {
-            //         var xmlhttp = new XMLHttpRequest();
-            //         xmlhttp.open("GET", url, true);
-            //         xmlhttp.send();
-            //         xmlhttp.onreadystatechange = function() {
-            //           if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-            //             var data = JSON.parse(xmlhttp.responseText);
-            //             resolve(data);
-            //         }  else if (xmlhttp.readyState == 4 && xmlhttp.status !== 200) {
-            //             reject(data);
-            //         }
-            //     };
-
-            // });
-            //     return promise;
-            // }
-
-            // ajaxRequest(compactVenueUrl)
-            // .then(getVenueDetails, failCallback)
-            // .then(successCallback, failCallback);
-
-            // function failCallback() {
-            //     createInfoWindowWithErrorMessage(marker);
-            // }
-            // function successCallback(data) {
-            //     createInfoWindow(marker, imageUrl, data.response.venue);
-            // }
-            // function getVenueDetails(data) {
-            //     var venueDetailUrl = "https://api.foursquare.com/v2/venues/" + data.response.venues[0].id + "?client_id=" + CLIENT_ID + "&client_secret=" + CLIENT_SECRET + "&v=20130815";
-            //     return ajaxRequest(venueDetailUrl);
-            // }
-
-
-
+            xmlhttp.onreadystatechange = function() {
+                if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                    var data = JSON.parse(xmlhttp.responseText);
+                    createInfoWindow(marker, imageUrl, data.response.venue);
+                } else if (xmlhttp.readyState == 4 && xmlhttp.status !== 200) {
+                    createInfoWindowWithErrorMessage(marker);
+                }
+            };
+            xmlhttp.open("GET", venueDetailUrl, true);
+            xmlhttp.send();
 
         }
     }
@@ -256,67 +206,67 @@ var ViewModel = function() {
         // add filtered markers on the map
         setMapForMarkers(map);
     };
-
-    // function toggles list view visibility
-    self.toggleListView = function() {
-        var isVisible = $('.list-data').css('display');
-        if (isVisible === "block") {
-            $(".list-data").hide("slow");
-            $(".hide-list").hide();
-            $(".show-list").show();
-            isVisible = false;
-        } else {
-            $(".list-data").show("slow");
-            $(".show-list").hide();
-            $(".hide-list").show();
-            isVisible = true;
-        }
-    };
-
 };
 
-function createAddressString(l) {
-    var res = l.address + " " + l.city + ", " + l.state + " " + l.postalCode;
-    return res;
+// get Sushi and Coffee places from Foursquare API and save them in the places array.
+ajaxRequest(COFFEE_IN_MTV_URL)
+    .then(getCoffeePlaces, failCallback)
+    .then(getSushiPlacesAndShowPlaces, failCallback);
+
+function ajaxRequest(url) {
+    var promise = new Promise(function(resolve, reject) {
+        var xmlhttp = new XMLHttpRequest();
+        xmlhttp.open("GET", url, true);
+        xmlhttp.send();
+        xmlhttp.onreadystatechange = function() {
+            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                var data = JSON.parse(xmlhttp.responseText);
+                resolve(data);
+            } else if (xmlhttp.readyState == 4 && xmlhttp.status !== 200) {
+                reject(data);
+            }
+        };
+
+    });
+    return promise;
 }
-var CLIENT_ID = "O4L3T0YIVRWVHCWIQ1Y1UHUXUDRBQ3S4AXKT4ZIQTSIKQMNN";
-var CLIENT_SECRET = "5KVONUBGB0YJZJFMTAIXKGCMRB15KEVAGRY2YWMCCZF03EXC";
-var newurl = "https://api.foursquare.com/v2/venues/search?client_id=" + CLIENT_ID + "&client_secret=" + CLIENT_SECRET + "&v=20130815&near=Mountain View, CA&query=coffee";
-var places = [];
-var xmlhttp = new XMLHttpRequest();
-xmlhttp.onreadystatechange = function() {
-    if (this.readyState == 4 && this.status == 200) {
-        var data = JSON.parse(this.responseText);
-        var p = data.response.venues;
-        console.log(p);
-        for (var i in p) {
-            places.push({name : p[i].name,
-    address: createAddressString(p[i].location),
-    lat: p[i].location.lat,
-    lng: p[i].location.lng,
-    id: p[i].id,
-    iconType: "coffee"})
-        }
-        console.log(places);
-        var viewModel = new ViewModel();
-        ko.applyBindings(viewModel);
-        viewModel.initializeMap();
-        viewModel.initializeMarkers();
-        viewModel.query.subscribe(function() {
-            viewModel.filter();
+
+function failCallback() {
+    document.getElementById("venues-error-message").className = "visible";
+}
+
+function getSushiPlacesAndShowPlaces(data) {
+    fillInPlacesArray(data.response.venues, "sushi");
+    viewModel.initializeMarkers();
+}
+
+function getCoffeePlaces(data) {
+    fillInPlacesArray(data.response.venues, "coffee");
+    return ajaxRequest(SUSHI_IN_MTV_URL);
+}
+
+function fillInPlacesArray(venues, type) {
+    for (var i in venues) {
+        places.push({
+            name: venues[i].name,
+            address: createAddressString(venues[i].location),
+            lat: venues[i].location.lat,
+            lng: venues[i].location.lng,
+            id: venues[i].id,
+            iconType: type
         });
-    } else if (this.readyState == 4 && this.status !== 200) {
-        console.log("error");
     }
-};
-xmlhttp.open("GET", newurl, true);
-xmlhttp.send();
+}
 
+function createAddressString(location) {
+    var address = location.address + " " + location.city + ", " + location.state + " " + location.postalCode;
+    return address;
+}
 
-// var viewModel = new ViewModel();
-// ko.applyBindings(viewModel);
-// viewModel.initializeMap();
-// viewModel.initializeMarkers();
-// viewModel.query.subscribe(function() {
-//     viewModel.filter();
-// });
+// start application
+var viewModel = new ViewModel();
+ko.applyBindings(viewModel);
+viewModel.initializeMap();
+viewModel.query.subscribe(function() {
+    viewModel.filter();
+});
